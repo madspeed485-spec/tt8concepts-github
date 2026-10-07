@@ -1,0 +1,42 @@
+---
+// Showcase.astro — the "Concept studies" grid of abstract art tiles.
+// The artwork is drawn purely with CSS (see the .art-* rules in global.css).
+---
+<!-- SHOWCASE -->
+<section class="section" id="work" aria-labelledby="work-title">
+  <div class="container">
+    <header class="section__head section__head--row">
+      <div>
+        <p class="eyebrow">Concept studies</p>
+        <h2 id="work-title" class="section__title">A glimpse of the playground.</h2>
+      </div>
+      <p class="section__lead">Abstract visual studies that hint at the range of worlds an idea can become. Illustrative only.</p>
+    </header>
+    <ul class="showcase" role="list">
+      <li class="tile tile--wide">
+        <div class="tile__art art-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="tile__meta"><span class="tag">Product</span><h3>Study 01 — Orbit</h3></div>
+      </li>
+      <li class="tile">
+        <div class="tile__art art-stack" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+        <div class="tile__meta"><span class="tag">Content</span><h3>Study 02 — Stack</h3></div>
+      </li>
+      <li class="tile">
+        <div class="tile__art art-wave" aria-hidden="true"></div>
+        <div class="tile__meta"><span class="tag">Digital</span><h3>Study 03 — Signal</h3></div>
+      </li>
+      <li class="tile tile--wide">
+        <div class="tile__art art-grid" aria-hidden="true"></div>
+        <div class="tile__meta"><span class="tag">Spatial</span><h3>Study 04 — Room</h3></div>
+      </li>
+      <li class="tile tile--wide">
+        <div class="tile__art art-bloom" aria-hidden="true"><span></span></div>
+        <div class="tile__meta"><span class="tag">Campaign</span><h3>Study 05 — Bloom</h3></div>
+      </li>
+      <li class="tile">
+        <div class="tile__art art-eight" aria-hidden="true"><span></span><span></span></div>
+        <div class="tile__meta"><span class="tag">Future</span><h3>Study 06 — Loop</h3></div>
+      </li>
+    </ul>
+  </div>
+</section>

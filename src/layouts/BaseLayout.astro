@@ -1,0 +1,90 @@
+---
+// BaseLayout.astro — the page "shell": everything in <head> (title, fonts,
+// icon, image preload) plus <body>. Pages put their content inside <slot />.
+import '../styles/global.css'; // all site styles (Astro bundles this file for you)
+import { asset } from '../utils/asset.js';
+
+// Props let each page set its own title/description (with sensible defaults).
+const {
+  title = 'T&T 8 Concepts — Ideas, shaped into anything',
+  description = 'T&T 8 Concepts is an ideas studio that turns a spark into any kind of concept — product, digital, spatial, campaign and beyond.',
+} = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="theme-color" content="#0A0A0A">
+  <!-- Google Fonts: Syne (headings) and Inter (body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Start downloading the hero photo early so the page appears faster -->
+  <link rel="preload" as="image" type="image/webp" href={asset('images/dreams-car.webp')} imagesrcset={`${asset('images/dreams-car-960.webp')} 960w, ${asset('images/dreams-car.webp')} 1920w`} imagesizes="100vw" fetchpriority="high">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230A0A0A'/%3E%3Ctext x='32' y='46' font-family='Arial' font-weight='900' font-size='40' text-anchor='middle' fill='%23D9D9D9'%3E8%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <slot />
+
+  <!--
+    Small bit of plain JavaScript for: the mobile menu button, the header
+    shadow when you scroll, the footer year, and the contact form.
+    "is:inline" tells Astro to leave this script exactly as written.
+  -->
+<script is:inline>
+  (function () {
+    var toggle = document.querySelector('.nav__toggle');
+    var menu = document.getElementById('nav-menu');
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      menu.classList.toggle('is-open', !open);
+    });
+    menu.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        toggle.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('is-open');
+      }
+    });
+
+    var header = document.querySelector('.site-header');
+    var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 8); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    var form = document.getElementById('contact-form');
+    var status = document.getElementById('form-status');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        status.textContent = 'Please add your name, a valid email and a few words about your idea.';
+        status.className = 'form__status is-error';
+        var firstInvalid = form.querySelector(':invalid');
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+      var name = form.elements.name.value.trim();
+      var body = [
+        'Name: ' + name,
+        'Email: ' + form.elements.email.value.trim(),
+        'Type of concept: ' + form.elements.type.value,
+        '',
+        'Idea:',
+        form.elements.message.value.trim()
+      ].join('\r\n');
+      var href = 'mailto:madsppeed485@gmail.com' +
+        '?subject=' + encodeURIComponent('New concept inquiry from ' + name) +
+        '&body=' + encodeURIComponent(body);
+      status.innerHTML = 'Opening your email app with your message ready to send. Nothing happened? Email us directly at <a href="mailto:madsppeed485@gmail.com">madsppeed485@gmail.com</a>.';
+      status.className = 'form__status is-ok';
+      window.location.href = href;
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+---
+// Header.astro — the sticky top bar: logo ("wordmark") + navigation menu.
+// The mobile menu button (.nav__toggle) is made interactive by the small
+// script in src/layouts/BaseLayout.astro.
+---
+<header class="site-header" id="top">
+  <nav class="nav container" aria-label="Primary">
+    <a href="#top" class="wordmark" aria-label="T&amp;T 8 Concepts, back to top">
+      <span class="wordmark__mark" aria-hidden="true">
+        <svg class="wordmark__gear" viewBox="-9 -9 18 18" width="11" height="11" focusable="false"><g class="gear gear--slow"><path d="M3.32 -1.12L7.87 -1.42A8.00 8.00 0 0 1 7.87 1.42L3.32 1.12A3.50 3.50 0 0 1 2.63 2.31L2.63 2.31L5.16 6.11A8.00 8.00 0 0 1 2.71 7.53L0.69 3.43A3.50 3.50 0 0 1 -0.69 3.43L-0.69 3.43L-2.71 7.53A8.00 8.00 0 0 1 -5.16 6.11L-2.63 2.31A3.50 3.50 0 0 1 -3.32 1.12L-3.32 1.12L-7.87 1.42A8.00 8.00 0 0 1 -7.87 -1.42L-3.32 -1.12A3.50 3.50 0 0 1 -2.63 -2.31L-2.63 -2.31L-5.16 -6.11A8.00 8.00 0 0 1 -2.71 -7.53L-0.69 -3.43A3.50 3.50 0 0 1 0.69 -3.43L0.69 -3.43L2.71 -7.53A8.00 8.00 0 0 1 5.16 -6.11L2.63 -2.31A3.50 3.50 0 0 1 3.32 -1.12ZM1.26 0A1.26 1.26 0 1 0 -1.26 0A1.26 1.26 0 1 0 1.26 0Z" fill="#E6E6E6"/></g></svg>
+        <svg viewBox="0 0 48 24" width="40" height="20"><path d="M24 12c-4-5-7-8-12-8a8 8 0 0 0 0 16c5 0 8-3 12-8s7-8 12-8a8 8 0 0 1 0 16c-5 0-8-3-12-8z" fill="none" stroke="url(#wm)" stroke-width="3.2" stroke-linecap="round"/><defs><linearGradient id="wm" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#9C9C9C"/><stop offset="1" stop-color="#E6E6E6"/></linearGradient></defs></svg>
+      </span>
+      <span class="wordmark__text">T&amp;T <b>8</b> Concepts</span>
+    </a>
+    <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-menu">
+      <span class="sr-only">Menu</span>
+      <span class="nav__bar" aria-hidden="true"></span>
+      <span class="nav__bar" aria-hidden="true"></span>
+    </button>
+    <ul class="nav__menu" id="nav-menu">
+      <li><a href="#what-we-do">What we do</a></li>
+      <li><a href="#process">How it works</a></li>
+      <li><a href="#work">Studies</a></li>
+      <li><a href="#contact" class="btn btn--small">Start a concept</a></li>
+    </ul>
+  </nav>
+</header>

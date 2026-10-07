@@ -1,0 +1,35 @@
+---
+// Services.astro — the "What we do" section with the 6 concept cards.
+//
+// ✏️ To add, remove or edit a card, just change this list.
+//    Each card needs: num (the small number), icon (any symbol/emoji),
+//    title and text. The HTML below repeats itself once per card.
+const cards = [
+  { num: '01', icon: '⬢', title: 'Product Concepts', text: 'Early-stage product thinking, from first sketch to tangible prototype direction.' },
+  { num: '02', icon: '▣', title: 'Digital Experiences', text: 'Websites, apps and interactive ideas that feel as good as they look.' },
+  { num: '03', icon: '▲', title: 'Spatial & Events', text: 'Pop-ups, installations, launches and spaces people want to step into.' },
+  { num: '04', icon: '✦', title: 'Campaigns & Stories', text: 'Narratives and campaign platforms built to travel across every channel.' },
+  { num: '05', icon: '●', title: 'Content & Media', text: 'Formats, series and visual worlds for screens big and small.' },
+  { num: '06', icon: '∞', title: 'Future & Innovation', text: 'Speculative ideas, new ventures and “what if?” explorations without limits.' },
+];
+---
+<!-- WHAT WE DO -->
+<section class="section" id="what-we-do" aria-labelledby="wwd-title">
+  <div class="container">
+    <header class="section__head">
+      <p class="eyebrow">What we do</p>
+      <h2 id="wwd-title" class="section__title">Every kind of concept.<br><span class="muted">One restless studio.</span></h2>
+      <p class="section__lead">If it can be imagined, it can be a concept. These are the territories we explore most — and they love to overlap.</p>
+    </header>
+    <ol class="cards" role="list">
+      {cards.map((card) => (
+        <li class="card">
+          <span class="card__num">{card.num}</span>
+          <span class="card__icon" aria-hidden="true">{card.icon}</span>
+          <h3>{card.title}</h3>
+          <p>{card.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+// Process.astro — the "How it works" section (Spark → Shape → Build).
+// ✏️ Edit the steps in this list; the number badge is added automatically.
+const steps = [
+  { title: 'Spark', text: 'We start with curiosity. Together we dig into the idea, the people it’s for and the problem worth solving, then generate more directions than you’d expect.' },
+  { title: 'Shape', text: 'The strongest directions get form: sketches, moodboards, names, stories and rough prototypes you can react to, refine and rally behind.' },
+  { title: 'Build', text: 'We turn the chosen concept into a clear, ready-to-run package — visuals, guidelines and next steps — so it can leave the page and enter the world.' },
+];
+---
+<!-- PROCESS -->
+<section class="section section--alt" id="process" aria-labelledby="process-title">
+  <div class="container">
+    <header class="section__head">
+      <p class="eyebrow">How it works</p>
+      <h2 id="process-title" class="section__title">Spark. Shape. Build.</h2>
+      <p class="section__lead">A simple loop that keeps ideas moving — and keeps you in the room the whole way.</p>
+    </header>
+    <ol class="steps" role="list">
+      {steps.map((step, i) => (
+        <li class="step">
+          <div class="step__badge" aria-hidden="true"><span>{i + 1}</span></div>
+          <h3>{step.title}</h3>
+          <p>{step.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
