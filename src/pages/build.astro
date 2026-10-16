@@ -1,0 +1,205 @@
+---
+// build.astro: the "Build your idea" page at /build/.
+// Customers stack page blocks into a simple wireframe, then email it to us.
+// To add a block type, add it to the `blocks` list below.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { asset } from '../utils/asset.js';
+const blocks = [
+  { id: 'nav', label: 'Menu bar', hint: 'Logo and links across the top' },
+  { id: 'hero', label: 'Big header image', hint: 'Photo with a headline and button' },
+  { id: 'text', label: 'Text section', hint: 'A heading and a paragraph' },
+  { id: 'cards', label: 'Three cards', hint: 'Services, features or products' },
+  { id: 'gallery', label: 'Photo gallery', hint: 'A grid of pictures' },
+  { id: 'video', label: 'Video', hint: 'An embedded video' },
+  { id: 'events', label: 'Event / booking', hint: 'Dates, times and a book button' },
+  { id: 'shop', label: 'Shop', hint: 'Products with prices' },
+  { id: 'reviews', label: 'Reviews', hint: 'Customer quotes' },
+  { id: 'map', label: 'Map', hint: 'Your location' },
+  { id: 'form', label: 'Contact form', hint: 'Name, email and message' },
+  { id: 'footer', label: 'Footer', hint: 'Contact details and social links' },
+];
+---
+<BaseLayout title="Build your idea | T&T 8 Concepts" description="Sketch the website or app you have in mind, block by block, and send it to T&T 8 Concepts.">
+  <header class="site-header" id="top">
+    <nav class="nav container" aria-label="Primary">
+      <a href={asset('')} class="wordmark"><span class="wordmark__text">T&amp;T <b>8</b> Concepts</span></a>
+      <a href={asset('')} class="btn btn--small">&larr; Back to home</a>
+    </nav>
+  </header>
+  <main id="main" class="section builder-page">
+    <div class="container">
+      <header class="section__head">
+        <p class="eyebrow">Build your idea</p>
+        <h1 class="section__title">Sketch your page, <span class="grad-text">block by block.</span></h1>
+        <p class="section__lead">Tap the blocks you want, in the order you want them. Type your own words and add photos to any block, and use the arrows to move things around. When it looks right, send it to us and we'll design, build and test the real thing.</p>
+      </header>
+      <div class="builder">
+        <div class="builder__panel">
+          <label class="builder__label" for="pagetype">What are you building?</label>
+          <select id="pagetype" class="builder__select">
+            <option>Website</option><option>Web app</option><option>Mobile app</option><option>Event page</option><option>Online store</option><option>Not sure yet</option>
+          </select>
+          <p class="builder__label">Add blocks</p>
+          <div class="palette">
+            {blocks.map((b) => (
+              <button type="button" class="palette__btn" data-id={b.id} data-label={b.label}>
+                <strong>+ {b.label}</strong><span>{b.hint}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div class="builder__canvas">
+          <div class="canvas__bar"><span>Your page preview</span><button type="button" id="reset" class="btn btn--small btn--ghost">Reset</button></div>
+          <div class="device" id="canvas" aria-live="polite"><p class="canvas__empty">Your page will appear here. Start by adding a block.</p></div>
+        </div>
+      </div>
+      <form class="form builder__form" id="builder-form" novalidate>
+        <div class="form__row">
+          <div class="field"><label for="b-name">Your name</label><input id="b-name" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="b-email">Email</label><input id="b-email" type="email" autocomplete="email" required></div>
+        </div>
+        <div class="field"><label for="b-notes">Anything else? Colors, sites you like, must-haves</label><textarea id="b-notes" rows="4"></textarea></div>
+        <button type="submit" class="btn btn--full">Send my layout <span aria-hidden="true">&rarr;</span></button>
+        <p class="form__status" id="b-status" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  const canvas = document.getElementById('canvas')!;
+  let items: { id: string; label: string; text?: string; img?: string; file?: string }[] = [];
+  const sketch: Record<string, string> = {
+    nav: '<div class="wf wf--nav"><i class="wf-box" style="width:60px"></i><span><i></i><i></i><i></i></span></div>',
+    hero: '<div class="wf wf--hero"><div class="wf-x"></div><i class="wf-line" style="width:50%"></i><i class="wf-btn"></i></div>',
+    text: '<div class="wf"><i class="wf-line" style="width:40%;height:10px"></i><i class="wf-line"></i><i class="wf-line" style="width:80%"></i></div>',
+    cards: '<div class="wf wf--row"><div class="wf-card"></div><div class="wf-card"></div><div class="wf-card"></div></div>',
+    gallery: '<div class="wf wf--grid"><div class="wf-x"></div><div class="wf-x"></div><div class="wf-x"></div><div class="wf-x"></div></div>',
+    video: '<div class="wf wf--hero"><div class="wf-play">&#9654;</div></div>',
+    events: '<div class="wf wf--row"><div class="wf-card wf-date">OCT</div><div style="flex:3"><i class="wf-line"></i><i class="wf-line" style="width:60%"></i><i class="wf-btn"></i></div></div>',
+    shop: '<div class="wf wf--row"><div class="wf-card"></div><div class="wf-card"></div><div class="wf-card"></div><div class="wf-card"></div></div>',
+    reviews: '<div class="wf wf--row"><div class="wf-card wf-quote">&ldquo;</div><div class="wf-card wf-quote">&ldquo;</div></div>',
+    map: '<div class="wf wf--map">&#128205;</div>',
+    form: '<div class="wf"><i class="wf-input"></i><i class="wf-input"></i><i class="wf-input" style="height:40px"></i><i class="wf-btn"></i></div>',
+    footer: '<div class="wf wf--nav wf--footer"><i class="wf-box" style="width:60px"></i><span><i></i><i></i></span></div>',
+  };
+  const esc = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+  function render() {
+    if (!items.length) { canvas.innerHTML = '<p class="canvas__empty">Your page will appear here. Start by adding a block.</p>'; return; }
+    canvas.innerHTML = items.map((it, i) => `
+      <div class="block">
+        <div class="block__bar"><span>${i + 1}. ${it.label}</span>
+          <span class="block__tools">
+            <button type="button" data-act="up" data-i="${i}" aria-label="Move ${it.label} up">&uarr;</button>
+            <button type="button" data-act="down" data-i="${i}" aria-label="Move ${it.label} down">&darr;</button>
+            <button type="button" data-act="del" data-i="${i}" aria-label="Remove ${it.label}">&times;</button>
+          </span></div>
+        ${it.img ? `<div class="block__photo" style="background-image:url('${it.img}')">${it.text ? `<p class="block__text block__text--over">${esc(it.text)}</p>` : ''}</div>`
+                 : `${it.text ? `<p class="block__text">${esc(it.text)}</p>` : ''}${sketch[it.id] || ''}`}
+        <div class="block__edit">
+          <input type="text" data-act="text" data-i="${i}" value="${esc(it.text || '')}" placeholder="Type your text for this block" aria-label="Text for ${it.label}">
+          <label class="block__upload">${it.img ? 'Change photo' : '+ Photo'}<input type="file" accept="image/*" data-act="img" data-i="${i}" hidden></label>
+          ${it.img ? `<button type="button" data-act="noimg" data-i="${i}" class="block__link">Remove photo</button>` : ''}
+        </div>
+      </div>`).join('');
+  }
+  canvas.addEventListener('input', (e) => {
+    const t = e.target as HTMLInputElement; if (t.dataset.act !== 'text') return;
+    const i = Number(t.dataset.i); items[i].text = t.value;
+    const blk = t.closest('.block')!; let p = blk.querySelector('.block__text') as HTMLElement | null;
+    if (!p && t.value) { render(); const n = canvas.querySelector<HTMLInputElement>(`input[data-act="text"][data-i="${i}"]`)!; n.focus(); n.setSelectionRange(n.value.length, n.value.length); return; }
+    if (p) { if (t.value) p.textContent = t.value; else render(); }
+  });
+  canvas.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement; if (t.dataset.act !== 'img' || !t.files?.[0]) return;
+    const i = Number(t.dataset.i); const file = t.files[0];
+    const img = new Image(); const reader = new FileReader();
+    reader.onload = () => { img.onload = () => {
+      const c = document.createElement('canvas'); const scale = Math.min(1, 900 / img.width); c.width = img.width * scale; c.height = img.height * scale;
+      c.getContext('2d')!.drawImage(img, 0, 0, c.width, c.height); items[i].img = c.toDataURL('image/jpeg', .8); items[i].file = file.name; render(); };
+      img.src = reader.result as string; };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('reset')!.addEventListener('click', () => {
+    if (items.length && !confirm('Start over? This clears every block, text and photo.')) return;
+    items = []; render();
+  });
+  document.querySelectorAll<HTMLButtonElement>('.palette__btn').forEach((b) =>
+    b.addEventListener('click', () => { items.push({ id: b.dataset.id!, label: b.dataset.label! }); render(); canvas.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }));
+  canvas.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest('button'); if (!t) return;
+    const i = Number(t.dataset.i), act = t.dataset.act;
+    if (!act || act === 'text' || act === 'img') return;
+    if (act === 'del') items.splice(i, 1);
+    if (act === 'noimg') { delete items[i].img; delete items[i].file; }
+    if (act === 'up' && i > 0) [items[i - 1], items[i]] = [items[i], items[i - 1]];
+    if (act === 'down' && i < items.length - 1) [items[i + 1], items[i]] = [items[i], items[i + 1]];
+    render();
+  });
+  document.getElementById('builder-form')!.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const status = document.getElementById('b-status')!;
+    const name = (document.getElementById('b-name') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('b-email') as HTMLInputElement).value.trim();
+    const notes = (document.getElementById('b-notes') as HTMLTextAreaElement).value.trim();
+    const type = (document.getElementById('pagetype') as HTMLSelectElement).value;
+    if (!name || !/^\S+@\S+\.\S+$/.test(email)) { status.textContent = 'Please add your name and a valid email.'; return; }
+    if (!items.length) { status.textContent = 'Add at least one block to your page first.'; return; }
+    const body = `Name: ${name}\nEmail: ${email}\nBuilding: ${type}\n\nMy page layout, top to bottom:\n${items.map((it, i) => `${i + 1}. ${it.label}${it.text ? ` - text: "${it.text}"` : ''}${it.file ? ` - photo: ${it.file}` : ''}`).join('\n')}${items.some((it) => it.file) ? '\n\n(I\'ll attach my photos to this email.)' : ''}\n\nNotes:\n${notes || '(none)'}`;
+    window.location.href = `mailto:madspeed485@gmail.com?subject=${encodeURIComponent('My ' + type + ' layout from ' + name)}&body=${encodeURIComponent(body)}`;
+    status.textContent = items.some((it) => it.file) ? 'Opening your email app with your layout. Attach your photos, then press Send!' : 'Opening your email app with your layout. Just press Send!';
+  });
+</script>
+
+<style is:global>
+  .builder-page { padding-top: 120px; }
+  .builder { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; margin-bottom: 40px; }
+  .builder__label { display: block; font-weight: 600; margin: 0 0 10px; }
+  .builder__select { width: 100%; margin-bottom: 22px; padding: 12px; border-radius: 12px; background: #111; color: var(--text); border: 1px solid var(--line); font: inherit; }
+  .palette { display: grid; gap: 8px; }
+  .palette__btn { text-align: left; padding: 10px 14px; border-radius: 12px; border: 1px solid var(--line); background: #0d0d0d; color: var(--text); cursor: pointer; font: inherit; transition: border-color .2s, background .2s; }
+  .palette__btn:hover { border-color: #888; background: #161616; }
+  .palette__btn strong { display: block; font-size: 15px; }
+  .palette__btn span { color: var(--muted); font-size: 13px; }
+  .builder__canvas { position: sticky; top: 90px; }
+  .device { min-height: 520px; max-height: 75vh; overflow: auto; background: #f4f4f4; border-radius: 18px; padding: 14px; border: 8px solid #1a1a1a; }
+  .canvas__empty { color: #777; text-align: center; margin: 200px 20px; }
+  .block { background: #fff; border: 1px dashed #bbb; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .block__bar { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #444; background: #eaeaea; padding: 4px 8px; font-weight: 600; }
+  .block__tools button { border: 0; background: #fff; border-radius: 6px; margin-left: 4px; width: 26px; height: 22px; cursor: pointer; color: #222; }
+  .block__tools button:hover { background: #F0182B; color: #fff; }
+  .wf { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .wf i { display: block; }
+  .wf-line { height: 7px; background: #d6d6d6; border-radius: 4px; width: 100%; }
+  .wf-box { height: 16px; background: #c9c9c9; border-radius: 4px; }
+  .wf-btn { width: 90px; height: 24px; border: 2px solid #999; border-radius: 6px; }
+  .wf-input { height: 22px; border: 2px solid #ccc; border-radius: 6px; }
+  .wf--nav { flex-direction: row; justify-content: space-between; align-items: center; }
+  .wf--nav span { display: flex; gap: 8px; }
+  .wf--nav span i { width: 34px; height: 7px; background: #ccc; border-radius: 4px; }
+  .wf--footer { background: #e2e2e2; }
+  .wf--hero { min-height: 120px; position: relative; align-items: center; justify-content: center; }
+  .wf-x { position: absolute; inset: 8px; border: 2px solid #ddd; background: linear-gradient(to top right, transparent 49.5%, #ddd 50%, transparent 50.5%), linear-gradient(to top left, transparent 49.5%, #ddd 50%, transparent 50.5%); }
+  .wf--hero > i, .wf--hero > .wf-btn { position: relative; background-color: #bbb; }
+  .wf--hero > .wf-btn { background: #fff; }
+  .wf-play { width: 50px; height: 50px; border-radius: 50%; background: #ccc; display: grid; place-items: center; color: #fff; }
+  .wf--row { flex-direction: row; }
+  .wf-card { flex: 1; min-height: 70px; border: 2px solid #ddd; border-radius: 8px; }
+  .wf-date, .wf-quote { display: grid; place-items: center; color: #999; font-weight: 700; font-size: 20px; }
+  .wf--grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .wf--grid .wf-x { position: relative; inset: auto; height: 60px; }
+  .wf--map { min-height: 100px; background: repeating-linear-gradient(45deg, #eee 0 10px, #e4e4e4 10px 20px); align-items: center; justify-content: center; font-size: 28px; }
+  .canvas__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: 600; }
+  #reset { background: transparent; color: var(--text); border: 1px solid #F0182B; }
+  #reset:hover { background: #F0182B; color: #fff; }
+  .block__text { margin: 10px 12px 0; color: #111; font-weight: 700; font-size: 15px; line-height: 1.3; }
+  .block__photo { min-height: 150px; background: #ccc center / cover no-repeat; display: flex; align-items: flex-end; }
+  .block__text--over { margin: 0; padding: 10px 12px; width: 100%; color: #fff; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+  .block__edit { display: flex; gap: 6px; align-items: center; padding: 8px; border-top: 1px dashed #ddd; flex-wrap: wrap; }
+  .block__edit input[type=text] { flex: 1; min-width: 140px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; font: inherit; font-size: 13px; color: #111; background: #fff; }
+  .block__upload, .block__link { font-size: 12px; font-weight: 600; padding: 6px 10px; border-radius: 6px; cursor: pointer; border: 0; background: #222; color: #fff; font-family: inherit; }
+  .block__link { background: #eee; color: #333; }
+  .block__upload:hover { background: #F0182B; }
+  .builder__form { max-width: none; width: 100%; }
+  @media (max-width: 860px) { .builder { grid-template-columns: 1fr; } .builder__canvas { position: static; } .palette { grid-template-columns: 1fr 1fr; } }
+</style>

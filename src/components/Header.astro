@@ -1,4 +1,5 @@
 ---
+import { asset } from '../utils/asset.js';
 // Header.astro — the sticky top bar: logo ("wordmark") + navigation menu.
 // The mobile menu button (.nav__toggle) is made interactive by the small
 // script in src/layouts/BaseLayout.astro.
@@ -19,8 +20,9 @@
     </button>
     <ul class="nav__menu" id="nav-menu">
       <li><a href="#what-we-do">What we do</a></li>
+      <li><a href="#projects">Projects</a></li>
       <li><a href="#process">How it works</a></li>
-      <li><a href="#work">Studies</a></li>
+      <li><a href={asset('build/')} class="btn btn--small btn--outline">Sketch it</a></li>
       <li><a href="#contact" class="btn btn--small">Start a concept</a></li>
     </ul>
   </nav>

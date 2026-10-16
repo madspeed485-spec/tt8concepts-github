@@ -10,3 +10,5 @@ dist/
 # OS / editor clutter
 .DS_Store
 Thumbs.db
+
+*.bak

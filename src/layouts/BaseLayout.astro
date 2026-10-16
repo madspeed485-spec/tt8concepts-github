@@ -38,12 +38,12 @@ const {
   (function () {
     var toggle = document.querySelector('.nav__toggle');
     var menu = document.getElementById('nav-menu');
-    toggle.addEventListener('click', function () {
+    if (toggle) toggle.addEventListener('click', function () {
       var open = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!open));
       menu.classList.toggle('is-open', !open);
     });
-    menu.addEventListener('click', function (e) {
+    if (menu) menu.addEventListener('click', function (e) {
       if (e.target.tagName === 'A') {
         toggle.setAttribute('aria-expanded', 'false');
         menu.classList.remove('is-open');
@@ -59,7 +59,7 @@ const {
 
     var form = document.getElementById('contact-form');
     var status = document.getElementById('form-status');
-    form.addEventListener('submit', function (e) {
+    if (form) form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) {
         status.textContent = 'Please add your name, a valid email and a few words about your idea.';
@@ -77,14 +77,16 @@ const {
         'Idea:',
         form.elements.message.value.trim()
       ].join('\r\n');
-      var href = 'mailto:madsppeed485@gmail.com' +
+      var href = 'mailto:madspeed485@gmail.com' +
         '?subject=' + encodeURIComponent('New concept inquiry from ' + name) +
         '&body=' + encodeURIComponent(body);
-      status.innerHTML = 'Opening your email app with your message ready to send. Nothing happened? Email us directly at <a href="mailto:madsppeed485@gmail.com">madsppeed485@gmail.com</a>.';
+      status.innerHTML = 'Opening your email app with your message ready to send. Nothing happened? Email us directly at <a href="mailto:madspeed485@gmail.com">madspeed485@gmail.com</a>.';
       status.className = 'form__status is-ok';
       window.location.href = href;
     });
   })();
 </script>
+<button type="button" class="to-top" id="to-top" >&uarr; Back to top</button>
+<script is:inline>(function(){var b=document.getElementById("to-top");function u(){b.classList.toggle("is-visible",window.scrollY>600)}window.addEventListener("scroll",u,{passive:true});u();b.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})})})();</script>
 </body>
 </html>
