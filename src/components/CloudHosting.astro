@@ -1,0 +1,70 @@
+---
+import { asset } from '../utils/asset.js';
+// CloudHosting.astro: sites TTC hosts for clients in the cloud.
+// To add a site, add one object to hostedSites. To change the uptime text, edit UPTIME_TARGET.
+const UPTIME_TARGET = '99.9%';
+const hostedSites = [
+  { name: 'Z\u2019s at the Gap', url: 'https://zsatthegap.com/', description: 'Event site for the yearly Nissan Z gathering at the Tail of the Dragon.', status: 'live', image: 'images/zatg-header.jpg' },
+  { name: 'T&T 8 Concepts', url: 'https://madspeed485-spec.github.io/tt8concepts-github/', description: 'Our own studio site, built and hosted by T&T 8 Concepts.', status: 'live' },
+];
+const sellingPoints = [
+  `${UPTIME_TARGET} uptime target`, 'Free SSL/HTTPS', 'Global CDN for fast loading', 'Daily backups',
+  'Uptime monitoring', 'Security updates', 'Custom domain and business email setup', 'Ongoing support and edits',
+];
+---
+<!-- CLOUD HOSTING -->
+<section class="section section--tight" id="hosting" aria-labelledby="hosting-title">
+  <div class="container">
+    <header class="section__head">
+      <p class="eyebrow">Cloud Hosting</p>
+      <h2 id="hosting-title" class="section__title">We build it. <span class="grad-text nowrap">We host it.</span></h2>
+      <p class="section__lead">T&amp;T 8 Concepts hosts its clients&rsquo; sites in the cloud, so your site stays fast, secure, and looked after.</p>
+    </header>
+    <ul class="hosts" role="list">
+      {hostedSites.map((s) => {
+        const inner = (
+          <>
+            <div class="host__cover" style={s.image ? `background-image:url(${asset(s.image)})` : ''}></div>
+            <div class="host__body">
+              <span class={`host__badge host__badge--${s.status}`}>{s.status === 'live' ? 'Live' : 'Upcoming'}</span>
+              <h3 class="host__name">{s.name}</h3>
+              <p>{s.description}</p>
+              {s.status === 'live' && <span class="host__cta">Visit site &rarr;<span class="sr-only">(opens in a new tab)</span></span>}
+            </div>
+          </>
+        );
+        return (
+          <li class={`host host--${s.status}`}>
+            {s.status === 'live' && s.url
+              ? <a class="host__link" href={s.url} target="_blank" rel="noopener noreferrer">{inner}</a>
+              : <div class="host__link">{inner}</div>}
+          </li>
+        );
+      })}
+    </ul>
+    <ul class="perks" role="list">
+      {sellingPoints.map((p) => <li><span class="perks__dot" aria-hidden="true"></span>{p}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .hosts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+  .host { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #0a0a0a; transition: border-color .2s, transform .2s; }
+  .host--live:hover { border-color: #c3002f; transform: translateY(-2px); }
+  .host__link { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; }
+  .host__cover { height: 110px; background: linear-gradient(135deg, #1a1a1a, #000) center / cover no-repeat; border-bottom: 1px solid var(--line); }
+  .host--upcoming .host__cover { background: repeating-linear-gradient(45deg, #111 0 10px, #0a0a0a 10px 20px); }
+  .host__body { padding: 16px 18px 18px; }
+  .host__body p { margin: 6px 0 0; font-size: 14px; color: var(--muted, #aaa); }
+  .host__name { font-family: 'Syne', sans-serif; font-size: 19px; margin: 8px 0 0; }
+  .host__badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; }
+  .host__badge--live { background: rgba(195,0,47,.15); color: #ff4d6d; border: 1px solid #c3002f; }
+  .host__badge--upcoming { background: #1a1a1a; color: #bbb; border: 1px solid #444; }
+  .host__cta { display: inline-block; margin-top: 10px; font-size: 14px; font-weight: 600; color: #ff4d6d; }
+  .perks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 20px; margin: 20px 0 0; padding: 18px 20px; list-style: none; border: 1px solid var(--line); border-radius: 16px; font-size: 14px; }
+  .perks li { display: flex; align-items: center; gap: 8px; }
+  .perks__dot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #c3002f; }
+  @media (max-width: 900px) { .hosts { grid-template-columns: 1fr 1fr; } .perks { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .hosts, .perks { grid-template-columns: 1fr; } .host__cover { height: 80px; } }
+</style>

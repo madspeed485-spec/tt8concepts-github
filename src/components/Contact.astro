@@ -1,9 +1,12 @@
 ---
-// Contact.astro — contact details + the "Send my idea" form.
-// The form doesn't need a server: the script in BaseLayout.astro turns the
-// answers into an email (a mailto: link) addressed to madspeed485@gmail.com.
-// ✏️ To change the phone/email/address, edit them here AND in Footer.astro
-//    (and the email in the script in BaseLayout.astro).
+// Contact.astro: contact details + the "Send my idea" form.
+// The script in BaseLayout.astro sends the form to Web3Forms, which emails it
+// to contact@tnt8concepts.com. Until the Web3Forms key is pasted into
+// src/config.ts, it falls back to opening the visitor's email app (mailto).
+// The "Projects start from" line comes from src/data/trust.ts (hidden while empty).
+import { WEB3FORMS_KEY } from '../config';
+import { trust } from '../data/trust';
+const price = trust.startingPrice.trim();
 ---
 <!-- CONTACT -->
 <section class="section contact" id="contact" aria-labelledby="contact-title">
@@ -12,13 +15,16 @@
       <p class="eyebrow">Let’s make something</p>
       <h2 id="contact-title" class="section__title">Got a website or app idea?<br><span class="grad-text">Let’s give it a shape.</span></h2>
       <p class="section__lead">Tell us what’s on your mind — half-formed is perfectly fine. We’ll get back to you to talk it through.</p>
+      {price && <p class="price-line">Projects start from <strong>{price}</strong></p>}
       <ul class="contact__points" role="list">
         <li>Any size of idea, any stage</li>
         <li>A conversation first, not a sales pitch</li>
         <li>Concepts you can actually use</li>
+        <li>Dreams turned into real sites and apps</li>
       </ul>
     </div>
-    <form class="form" id="contact-form" novalidate>
+    <form class="form" id="contact-form" data-key={WEB3FORMS_KEY} novalidate>
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
       <div class="form__row">
         <div class="field">
           <label for="name">Your name</label>
@@ -42,7 +48,7 @@
       </div>
       <div class="field">
         <label for="message">Your idea</label>
-        <textarea id="message" name="message" rows="5" placeholder="A few sentences about what you’re imagining…" required></textarea>
+        <textarea id="message" name="message" rows="3" placeholder="A few sentences about what you’re imagining…" required></textarea>
       </div>
       <button type="submit" class="btn btn--full">Send my idea <span aria-hidden="true">→</span></button>
       <p class="form__status" id="form-status" role="status" aria-live="polite"></p>

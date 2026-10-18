@@ -6,9 +6,11 @@ import { asset } from '../utils/asset.js';
 
 // Props let each page set its own title/description (with sensible defaults).
 const {
-  title = 'T&T 8 Concepts — Ideas, shaped into anything',
-  description = 'T&T 8 Concepts is an ideas studio that turns a spark into any kind of concept — product, digital, spatial, campaign and beyond.',
+  title = 'T&T 8 Concepts | Websites, Web Apps, Mobile Apps & CRMs for Small Businesses',
+  description = 'T&T 8 Concepts designs, builds and hosts websites, web apps, mobile apps and CRMs for small businesses, from first sketch to launch.',
 } = Astro.props;
+// Full page address, used by link previews (Facebook, iMessage, X, LinkedIn).
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href;
 ---
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +20,16 @@ const {
   <title>{title}</title>
   <meta name="description" content={description}>
   <meta name="theme-color" content="#0A0A0A">
+  <link rel="canonical" href={pageUrl}>
+  <!-- Link previews when the site is shared -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="T&T 8 Concepts">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
   <!-- Google Fonts: Syne (headings) and Inter (body text) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,11 +63,12 @@ const {
     });
 
     var header = document.querySelector('.site-header');
-    var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 8); };
+    var onScroll = function () { if (header) header.classList.toggle('is-scrolled', window.scrollY > 8); };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    document.getElementById('year').textContent = new Date().getFullYear();
+    var year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
 
     var form = document.getElementById('contact-form');
     var status = document.getElementById('form-status');
@@ -69,24 +82,91 @@ const {
         return;
       }
       var name = form.elements.name.value.trim();
-      var body = [
-        'Name: ' + name,
-        'Email: ' + form.elements.email.value.trim(),
-        'Type of concept: ' + form.elements.type.value,
-        '',
-        'Idea:',
-        form.elements.message.value.trim()
-      ].join('\r\n');
-      var href = 'mailto:madspeed485@gmail.com' +
-        '?subject=' + encodeURIComponent('New concept inquiry from ' + name) +
-        '&body=' + encodeURIComponent(body);
-      status.innerHTML = 'Opening your email app with your message ready to send. Nothing happened? Email us directly at <a href="mailto:madspeed485@gmail.com">madspeed485@gmail.com</a>.';
+      var email = form.elements.email.value.trim();
+      var type = form.elements.type.value;
+      var message = form.elements.message.value.trim();
+      var key = form.getAttribute('data-key') || '';
+      var hasKey = key && key.indexOf('YOUR_') !== 0;
+
+      // No Web3Forms key yet: open the visitor's email app instead (mailto).
+      if (!hasKey) {
+        var body = [
+          'Name: ' + name,
+          'Email: ' + email,
+          'Type of concept: ' + type,
+          '',
+          'Idea:',
+          message
+        ].join('\r\n');
+        var href = 'mailto:contact@tnt8concepts.com' +
+          '?subject=' + encodeURIComponent('New T&T 8 Concepts idea from ' + name) +
+          '&body=' + encodeURIComponent(body);
+        status.innerHTML = 'Opening your email app with your message ready to send. Nothing happened? Email us directly at <a href="mailto:contact@tnt8concepts.com">contact@tnt8concepts.com</a>.';
+        status.className = 'form__status is-ok';
+        window.location.href = href;
+        return;
+      }
+
+      // Web3Forms: emails the message straight to contact@tnt8concepts.com.
+      var btn = form.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      status.textContent = 'Sending...';
       status.className = 'form__status is-ok';
-      window.location.href = href;
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: key,
+          subject: 'New T&T 8 Concepts idea from ' + name,
+          from_name: 'T&T 8 Concepts Website',
+          replyto: email,
+          name: name,
+          email: email,
+          'Type of concept': type,
+          message: message,
+          botcheck: form.elements.botcheck && form.elements.botcheck.checked ? true : ''
+        })
+      }).then(function (r) { return r.json(); }).then(function (data) {
+        if (!data || !data.success) throw new Error((data && data.message) || 'Send failed');
+        form.reset();
+        status.textContent = 'Thanks, we\u2019ll reply within 1 business day.';
+        status.className = 'form__status is-ok';
+      }).catch(function () {
+        status.innerHTML = 'Sorry, your message didn\u2019t send. Please try again, or email us at <a href="mailto:contact@tnt8concepts.com">contact@tnt8concepts.com</a>.';
+        status.className = 'form__status is-error';
+      }).then(function () { if (btn) btn.disabled = false; });
     });
   })();
 </script>
 <button type="button" class="to-top" id="to-top" >&uarr; Back to top</button>
 <script is:inline>(function(){var b=document.getElementById("to-top");function u(){b.classList.toggle("is-visible",window.scrollY>600)}window.addEventListener("scroll",u,{passive:true});u();b.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})})})();</script>
-</body>
+<div id="copy-toast" role="status" aria-live="polite" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:#1d1d1d;color:#fff;border:1px solid #444;padding:10px 18px;border-radius:999px;font:500 14px Inter,system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:9999"></div>
+    <script is:inline>
+      (function () {
+        var toast = document.getElementById('copy-toast');
+        var timer;
+        function show(msg) {
+          if (!toast) return;
+          toast.textContent = msg;
+          toast.style.opacity = '1';
+          toast.style.transform = 'translateX(-50%) translateY(0)';
+          clearTimeout(timer);
+          timer = setTimeout(function () { toast.style.opacity = '0'; toast.style.transform = 'translateX(-50%) translateY(20px)'; }, 2600);
+        }
+        document.addEventListener('click', function (e) {
+          var a = e.target.closest && e.target.closest('a[href^="mailto:"]');
+          if (!a) return;
+          var email = a.getAttribute('href').replace('mailto:', '').split('?')[0];
+          var done = function () { show('Email copied: ' + email); };
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(email).then(done, function () { show(email); });
+          } else {
+            var ta = document.createElement('textarea'); ta.value = email; document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); done(); } catch (err) { show(email); }
+            ta.remove();
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>

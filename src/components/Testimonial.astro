@@ -1,0 +1,25 @@
+---
+// Testimonial.astro: one client quote. Edit the words in src/data/trust.ts.
+// Renders nothing until both quote and name are filled in.
+import { trust } from '../data/trust';
+const t = trust.testimonial;
+const show = Boolean(t.quote.trim() && t.name.trim());
+---
+{show && (
+  <section class="section section--tight testimonial" aria-label="What clients say">
+    <div class="container">
+      <figure class="quote">
+        <blockquote><p>&ldquo;{t.quote}&rdquo;</p></blockquote>
+        <figcaption><strong>{t.name}</strong>{t.role && <span>, {t.role}</span>}</figcaption>
+      </figure>
+    </div>
+  </section>
+)}
+
+<style>
+  .quote { margin: 0 auto; max-width: 760px; padding: 22px 26px; border-left: 3px solid var(--red); background: #0a0a0a; border-radius: 0 16px 16px 0; }
+  .quote blockquote { margin: 0; }
+  .quote p { margin: 0; font-family: var(--font-display); font-size: clamp(17px, 1.6vw, 22px); font-weight: 600; line-height: 1.4; }
+  .quote figcaption { margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .quote figcaption strong { color: var(--text); }
+</style>

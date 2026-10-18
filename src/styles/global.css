@@ -469,3 +469,35 @@ body { font-size: 15.5px; }
   #what-we-do .section__head h2#wwd-title { font-size: clamp(22px, 2.4vw, 34px) !important; max-width: none !important; margin-bottom: 10px; }
   #what-we-do .section__head .section__lead { text-align: left !important; max-width: none !important; }
 }
+/* Contact points: 2 x 2 */
+ul.contact__points { display: grid; grid-template-columns: repeat(2, max-content); gap: 10px 48px; }
+@media (max-width: 640px) { ul.contact__points { grid-template-columns: 1fr; } }
+
+/* Compact contact form */
+#contact-form { padding: 16px 20px !important; gap: 10px !important; max-width: 820px; }
+#contact-form label { font-size: 12px; margin-bottom: 4px; }
+#contact-form input, #contact-form select { padding: 8px 12px !important; font-size: 14px !important; min-height: 0 !important; height: 38px; }
+#contact-form textarea { padding: 8px 12px !important; font-size: 14px !important; min-height: 70px !important; height: 70px; }
+#contact-form .btn--full { padding: 9px 18px !important; font-size: 14px !important; width: auto !important; justify-self: start; }
+/* Hero caption: plain text, not a pill */
+.hero__caption { background: none !important; border: 0 !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; padding: 0 !important; border-radius: 0 !important; color: #d9d9d9; font-weight: 500; letter-spacing: 0.02em; text-shadow: 0 2px 10px rgba(0,0,0,.85); }
+
+/* Compact What we do cards */
+#what-we-do .cards { gap: 10px !important; }
+#what-we-do .card { padding: 12px 16px !important; min-height: 0 !important; column-gap: 14px !important; align-items: center; }
+#what-we-do .card__icon { width: 36px !important; height: 36px !important; font-size: 18px !important; border-radius: 10px !important; }
+#what-we-do .card h3 { font-size: 15px !important; margin: 0 0 2px !important; }
+#what-we-do .card p { font-size: 13px !important; line-height: 1.4 !important; margin: 0 !important; }
+#what-we-do .card__num { font-size: 10px !important; }
+#what-we-do .card__cta { font-size: 12px !important; margin-top: 4px !important; }
+/* Projects start from line (Contact) */
+.price-line { margin: 10px 0 0; font-size: 15px; color: var(--muted); }
+.price-line strong { color: var(--red-light); font-family: var(--font-display); font-size: 17px; }
+
+/* What we do: plain list, not button-like cards */
+#what-we-do .cards { gap: 0 32px !important; }
+#what-we-do .card, #what-we-do .card--link { background: none !important; border: 0 !important; border-bottom: 1px solid rgba(255,255,255,.08) !important; border-radius: 0 !important; box-shadow: none !important; padding: 12px 0 !important; transform: none !important; }
+#what-we-do .card:hover, #what-we-do .card--link:hover { background: none !important; border-color: rgba(255,255,255,.08) !important; box-shadow: none !important; transform: none !important; }
+#what-we-do .card::before, #what-we-do .card::after { display: none !important; }
+#what-we-do .card__icon { background: none !important; border: 0 !important; box-shadow: none !important; width: 28px !important; height: 28px !important; }
+#what-we-do .card__cover { cursor: default; }

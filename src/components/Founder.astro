@@ -1,0 +1,29 @@
+---
+// Founder.astro: the "About Tony" block. Edit the words in src/data/trust.ts.
+// Renders nothing until bio is filled in. The photo shows only if one is set.
+import { trust } from '../data/trust';
+import { asset } from '../utils/asset.js';
+const f = trust.founder;
+const show = Boolean(f.bio.trim());
+---
+{show && (
+  <section class="section section--tight founder" id="about" aria-labelledby="founder-title">
+    <div class="container founder__grid">
+      {f.photo && <img class="founder__photo" src={asset(f.photo)} alt={`${f.name}, founder of T&T 8 Concepts`} width="120" height="120" loading="lazy">}
+      <div>
+        <p class="eyebrow">The founder</p>
+        <h2 id="founder-title" class="founder__title">About {f.name}</h2>
+        <p class="founder__bio">{f.bio}</p>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .founder__grid { display: flex; gap: 22px; align-items: center; max-width: 860px; }
+  .founder__photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 2px solid var(--red); flex: none; }
+  .founder .eyebrow { margin-bottom: 6px; }
+  .founder__title { font-size: clamp(20px, 2.2vw, 30px); margin: 0 0 6px; }
+  .founder__bio { margin: 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 600px) { .founder__grid { flex-direction: column; align-items: flex-start; } }
+</style>
