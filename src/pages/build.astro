@@ -3,6 +3,7 @@
 // Customers stack page blocks into a simple wireframe, then email it to us.
 // To add a block type, add it to the `blocks` list below.
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
 import { asset } from '../utils/asset.js';
 import { WEB3FORMS_KEY } from '../config';
 const blocks = [
@@ -66,6 +67,7 @@ const blocks = [
       </form>
     </div>
   </main>
+  <Footer />
 </BaseLayout>
 
 <script>
