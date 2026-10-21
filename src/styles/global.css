@@ -336,7 +336,6 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .footer__contact a, .social-link { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-size: 15px; transition: color .2s; }
 .footer__contact a:hover, .social-link:hover { color: #FFFFFF; text-decoration: underline; }
 .footer__contact svg, .social-link svg { flex: none; color: #BDBDBD; }
-.contact__social { margin: 22px 0 0; }
 .footer__copy { grid-area: copy; color: #9A9A9A; font-size: 14px; padding-top: 20px; border-top: 1px solid var(--line); }
 
 /* ===== Responsive ===== */
