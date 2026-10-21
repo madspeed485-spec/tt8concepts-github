@@ -6,6 +6,7 @@
 // The "Projects start from" line comes from src/data/trust.ts (hidden while empty).
 import { WEB3FORMS_KEY } from '../config';
 import { trust } from '../data/trust';
+import FacebookLink from './FacebookLink.astro';
 const price = trust.startingPrice.trim();
 ---
 <!-- CONTACT -->
@@ -22,6 +23,7 @@ const price = trust.startingPrice.trim();
         <li>Concepts you can actually use</li>
         <li>Dreams turned into real sites and apps</li>
       </ul>
+      <p class="contact__social"><FacebookLink /></p>
     </div>
     <form class="form" id="contact-form" data-key={WEB3FORMS_KEY} novalidate>
       <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none">
