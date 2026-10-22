@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tnt8concepts.com/sitemap-index.xml
+Sitemap: https://tnt8concepts.com/sitemap.xml
